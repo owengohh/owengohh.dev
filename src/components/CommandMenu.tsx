@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { Command } from "cmdk";
 import { Search } from "lucide-react";
 
@@ -22,6 +23,7 @@ function applyThemeMode(mode: ThemeMode) {
 
 export default function CommandMenu() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -41,6 +43,11 @@ export default function CommandMenu() {
     setOpen(false);
   };
 
+  const navigateTo = (to: string) => {
+    navigate({ to });
+    setOpen(false);
+  };
+
   if (!open) return null;
 
   return (
@@ -52,32 +59,29 @@ export default function CommandMenu() {
       <Command.Dialog
         open={open}
         onOpenChange={setOpen}
-        className="fixed left-1/2 top-1/2 z-50 max-h-85 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 animate-cmdk-dialog overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--header-bg)] p-0 shadow-2xl backdrop-blur-xl"
+        className="fixed left-1/2 top-1/2 z-50 max-h-85 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 animate-cmdk-dialog overflow-hidden rounded-2xl border border-(--line) bg-[var(--header-bg)] p-0 shadow-2xl backdrop-blur-xl"
       >
         <div className="flex items-center border-b border-(--line) px-4">
-          <Search className="h-4 w-4 text-[var(--sea-ink-soft)]" />
+          <Search className="h-4 w-4 text-(--sea-ink-soft)" />
           <Command.Input
             placeholder="Type a command or search..."
-            className="h-12 w-full bg-transparent px-3 text-sm text-[var(--sea-ink)] outline-none placeholder:text-[var(--sea-ink-soft)]"
+            className="h-12 w-full bg-transparent px-3 text-sm text-(--sea-ink) outline-none placeholder:text-(--sea-ink-soft)"
           />
-          <kbd className="pointer-events-none ml-auto hidden h-6 shrink-0 select-none items-center gap-1 rounded-md border border-[var(--line)] bg-[var(--chip-bg)] px-2 font-mono text-[10px] font-medium text-[var(--sea-ink-soft)] sm:flex">
+          <kbd className="pointer-events-none ml-auto hidden h-6 shrink-0 select-none items-center gap-1 rounded-md border border-(--line) bg-[var(--chip-bg)] px-2 font-mono text-[10px] font-medium text-(--sea-ink-soft) sm:flex">
             ESC
           </kbd>
         </div>
         <Command.List className="max-h-80 overflow-y-auto p-2">
-          <Command.Empty className="py-8 text-center text-sm text-[var(--sea-ink-soft)]">
+          <Command.Empty className="py-8 text-center text-sm text-(--sea-ink-soft)">
             No results found.
           </Command.Empty>
           <Command.Group
             heading="Navigation"
-            className="[&_[cmdk-group-heading]]:mb-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[var(--sea-ink-soft)]"
+            className="[&_[cmdk-group-heading]]:mb-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-(--sea-ink-soft)"
           >
             <Command.Item
-              onSelect={() => {
-                window.location.href = "/";
-                setOpen(false);
-              }}
-              className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[var(--sea-ink)] data-[selected=true]:bg-[var(--link-bg-hover)]"
+              onSelect={() => navigateTo("/")}
+              className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-(--sea-ink) data-[selected=true]:bg-[var(--link-bg-hover)]"
             >
               <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--chip-bg)] text-xs font-medium text-[var(--sea-ink-soft)]">
                 H
@@ -87,49 +91,49 @@ export default function CommandMenu() {
           </Command.Group>
           <Command.Group
             heading="Theme"
-            className="mt-4 [&_[cmdk-group-heading]]:mb-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[var(--sea-ink-soft)]"
+            className="mt-4 [&_[cmdk-group-heading]]:mb-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-(--sea-ink-soft)"
           >
             <Command.Item
               onSelect={() => setTheme("light")}
-              className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[var(--sea-ink)] data-[selected=true]:bg-[var(--link-bg-hover)]"
+              className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-(--sea-ink) data-[selected=true]:bg-[var(--link-bg-hover)]"
             >
-              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--chip-bg)] text-xs font-medium text-[var(--sea-ink-soft)]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-(--chip-bg) text-xs font-medium text-(--sea-ink-soft)">
                 L
               </span>
               Light
             </Command.Item>
             <Command.Item
               onSelect={() => setTheme("dark")}
-              className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[var(--sea-ink)] data-[selected=true]:bg-[var(--link-bg-hover)]"
+              className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-(--sea-ink) data-[selected=true]:bg-[var(--link-bg-hover)]"
             >
-              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--chip-bg)] text-xs font-medium text-[var(--sea-ink-soft)]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-(--chip-bg) text-xs font-medium text-(--sea-ink-soft)">
                 D
               </span>
               Dark
             </Command.Item>
             <Command.Item
               onSelect={() => setTheme("auto")}
-              className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[var(--sea-ink)] data-[selected=true]:bg-[var(--link-bg-hover)]"
+              className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-(--sea-ink) data-[selected=true]:bg-[var(--link-bg-hover)]"
             >
-              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--chip-bg)] text-xs font-medium text-[var(--sea-ink-soft)]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-(--chip-bg) text-xs font-medium text-(--sea-ink-soft)">
                 S
               </span>
               System
             </Command.Item>
           </Command.Group>
         </Command.List>
-        <div className="flex items-center justify-between border-t border-[var(--line)] px-4 py-3">
-          <div className="flex items-center gap-2 text-xs text-[var(--sea-ink-soft)]">
-            <kbd className="rounded-md border border-[var(--line)] bg-[var(--chip-bg)] px-1.5 py-0.5 font-mono text-[10px]">
+        <div className="flex items-center justify-between border-t border-(--line) px-4 py-3">
+          <div className="flex items-center gap-2 text-xs text-(--sea-ink-soft)">
+            <kbd className="rounded-md border border-(--line) bg-(--chip-bg) px-1.5 py-0.5 font-mono text-[10px]">
               ↑
             </kbd>
-            <kbd className="rounded-md border border-[var(--line)] bg-[var(--chip-bg)] px-1.5 py-0.5 font-mono text-[10px]">
+            <kbd className="rounded-md border border-(--line) bg-(--chip-bg) px-1.5 py-0.5 font-mono text-[10px]">
               ↓
             </kbd>
             <span>to navigate</span>
           </div>
-          <div className="flex items-center gap-2 text-xs text-[var(--sea-ink-soft)]">
-            <kbd className="rounded-md border border-[var(--line)] bg-[var(--chip-bg)] px-1.5 py-0.5 font-mono text-[10px]">
+          <div className="flex items-center gap-2 text-xs text-(--sea-ink-soft)">
+            <kbd className="rounded-md border border-(--line) bg-(--chip-bg) px-1.5 py-0.5 font-mono text-[10px]">
               ↵
             </kbd>
             <span>to select</span>
