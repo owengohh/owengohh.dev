@@ -1,5 +1,5 @@
 [build]
-command = "pnpm install && pnpx vp build"
+command = "npm install -g vite-plus && vp build"
 dir = "dist/client"
 
 [dev]
