@@ -4,6 +4,28 @@
 
 @theme {
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --animate-cmdk-overlay: cmdk-overlay 200ms ease-out;
+  --animate-cmdk-dialog: cmdk-dialog 200ms ease-out;
+}
+
+@keyframes cmdk-overlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cmdk-dialog {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 :root {
