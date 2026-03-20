@@ -23,6 +23,7 @@ vp check     # Run format, lint, and type checks
 ```
 
 Use `vp` instead of pnpm/npm directly for package operations:
+
 ```bash
 vp add <package>    # Add dependency
 vp remove <package> # Remove dependency
