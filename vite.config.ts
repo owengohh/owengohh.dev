@@ -1,6 +1,5 @@
 import { defineConfig } from "vite-plus";
 import { devtools } from "@tanstack/devtools-vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
@@ -10,14 +9,15 @@ import netlify from "@netlify/vite-plugin-tanstack-start";
 
 const config = defineConfig({
   lint: { options: { typeAware: true, typeCheck: true } },
-  plugins: [
-    devtools(),
-    netlify(),
-    tsconfigPaths({ projects: ["./tsconfig.json"] }),
-    tailwindcss(),
-    tanstackStart(),
-    viteReact(),
-  ],
+  resolve: {
+    tsconfigPaths: true,
+  },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./src/test/setup.ts"],
+  },
+  plugins: [devtools(), netlify(), tailwindcss(), tanstackStart(), viteReact()],
 });
 
 export default config;
