@@ -8,6 +8,9 @@ import tailwindcss from "@tailwindcss/vite";
 import netlify from "@netlify/vite-plugin-tanstack-start";
 
 const config = defineConfig({
+  fmt: {
+    ignorePatterns: ["src/routeTree.gen.ts"],
+  },
   lint: { options: { typeAware: true, typeCheck: true } },
   resolve: {
     tsconfigPaths: true,
