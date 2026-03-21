@@ -41,6 +41,13 @@ const mockPosts = [
     excerpt: "Shows pagination works.",
     tags: [{ name: "Personal", slug: "personal" }],
   },
+  ...Array.from({ length: WRITING_PAGE_SIZE }, (_, index) => ({
+    title: `Archive Note ${index + 1}`,
+    slug: `archive-note-${index + 1}`,
+    published_at: `2026-01-${String(index + 1).padStart(2, "0")}T00:00:00.000Z`,
+    excerpt: `Archived note ${index + 1}.`,
+    tags: [{ name: "Notes", slug: "notes" }],
+  })),
 ];
 
 const mockTags = [
@@ -50,6 +57,7 @@ const mockTags = [
   { name: "Writing", slug: "writing" },
   { name: "Hardware", slug: "hardware" },
   { name: "Personal", slug: "personal" },
+  { name: "Notes", slug: "notes" },
 ];
 
 vi.mock("../../hooks/useZenblogPosts", () => ({
@@ -103,13 +111,19 @@ describe("WritingIndex", () => {
   });
 
   it("paginates entries", () => {
+    const firstPagePost = mockPosts[0];
+    const secondPagePost = mockPosts.slice(WRITING_PAGE_SIZE)[0];
+
+    expect(firstPagePost).toBeDefined();
+    expect(secondPagePost).toBeDefined();
+
     render(<WritingIndex />);
 
-    expect(screen.getByText(mockPosts[0]!.title)).toBeTruthy();
-    expect(screen.queryByText(mockPosts[WRITING_PAGE_SIZE]!.title)).toBeNull();
+    expect(screen.getByText(firstPagePost!.title)).toBeTruthy();
+    expect(screen.queryByText(secondPagePost!.title)).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "Next" }));
 
-    expect(screen.getByText(mockPosts[WRITING_PAGE_SIZE]!.title)).toBeTruthy();
+    expect(screen.getByText(secondPagePost!.title)).toBeTruthy();
   });
 });

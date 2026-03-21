@@ -197,6 +197,13 @@ export default function WritingIndex() {
                           {post.excerpt}
                         </span>
                       ) : null}
+                      {post.tags?.length ? (
+                        <span className="mt-2 flex flex-wrap gap-x-2 gap-y-1 text-xs text-(--sea-ink-soft)">
+                          {post.tags.map((tag) => (
+                            <span key={tag.slug}>#{tag.slug}</span>
+                          ))}
+                        </span>
+                      ) : null}
                     </span>
 
                     <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-(--lagoon-deep) opacity-100 transition-all duration-200 sm:-translate-x-1.5 sm:opacity-0 sm:group-hover:translate-x-0 sm:group-hover:opacity-100 sm:group-focus-visible:translate-x-0 sm:group-focus-visible:opacity-100" />

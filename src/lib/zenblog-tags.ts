@@ -3,6 +3,4 @@ import { zenblog } from "#/lib/zenblog";
 
 export type ZenblogTagsResponse = Awaited<ReturnType<typeof zenblog.tags.list>>;
 
-export const getZenblogTags = createServerFn({ method: "GET" }).handler(async () => {
-  return zenblog.tags.list();
-});
+export const getZenblogTags = createServerFn({ method: "GET" }).handler(() => zenblog.tags.list());

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getZenblogTags, type ZenblogTagsResponse } from "#/lib/zenblog-tags";
 
@@ -13,59 +13,24 @@ type UseZenblogTagsResult = {
   refetch: () => void;
 };
 
+const ZENBLOG_TAGS_STALE_TIME = 10 * 60 * 1000;
+
 export function useZenblogTags(options: UseZenblogTagsOptions = {}): UseZenblogTagsResult {
   const { enabled = true } = options;
   const fetchTags = useServerFn(getZenblogTags);
-  const [data, setData] = useState<ZenblogTagsResponse | null>(null);
-  const [error, setError] = useState<Error | null>(null);
-  const [isLoading, setIsLoading] = useState(enabled);
-  const [requestVersion, setRequestVersion] = useState(0);
-
-  useEffect(() => {
-    if (!enabled) {
-      setIsLoading(false);
-      return;
-    }
-
-    let isCancelled = false;
-
-    setIsLoading(true);
-    setError(null);
-
-    fetchTags()
-      .then((response) => {
-        if (isCancelled) {
-          return;
-        }
-
-        setData(response);
-      })
-      .catch((nextError: unknown) => {
-        if (isCancelled) {
-          return;
-        }
-
-        setError(
-          nextError instanceof Error ? nextError : new Error("Failed to fetch Zenblog tags"),
-        );
-      })
-      .finally(() => {
-        if (isCancelled) {
-          return;
-        }
-
-        setIsLoading(false);
-      });
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [enabled, fetchTags, requestVersion]);
+  const query = useQuery({
+    queryKey: ["zenblog", "tags"],
+    queryFn: () => fetchTags(),
+    enabled,
+    staleTime: ZENBLOG_TAGS_STALE_TIME,
+  });
 
   return {
-    data,
-    error,
-    isLoading,
-    refetch: () => setRequestVersion((value) => value + 1),
+    data: query.data ?? null,
+    error: query.error instanceof Error ? query.error : null,
+    isLoading: query.isLoading,
+    refetch: () => {
+      void query.refetch();
+    },
   };
 }

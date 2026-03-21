@@ -14,6 +14,4 @@ export type ZenblogPostsResponse = Awaited<ReturnType<typeof zenblog.posts.list>
 
 export const getZenblogPosts = createServerFn({ method: "GET" })
   .inputValidator((data: ZenblogPostsInput = {}) => data)
-  .handler(async ({ data }) => {
-    return zenblog.posts.list(data);
-  });
+  .handler(async ({ data }) => zenblog.posts.list(data));
