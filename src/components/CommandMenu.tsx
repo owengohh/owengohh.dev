@@ -12,12 +12,7 @@ function applyThemeMode(mode: ThemeMode) {
 
   document.documentElement.classList.remove("light", "dark");
   document.documentElement.classList.add(resolved);
-
-  if (mode === "auto") {
-    document.documentElement.removeAttribute("data-theme");
-  } else {
-    document.documentElement.setAttribute("data-theme", mode);
-  }
+  document.documentElement.setAttribute("data-theme", mode);
 
   document.documentElement.style.colorScheme = resolved;
 }
@@ -49,7 +44,7 @@ export default function CommandMenu() {
   };
 
   const navigateTo = (to: string) => {
-    navigate({ to });
+    void navigate({ to });
     close();
   };
 

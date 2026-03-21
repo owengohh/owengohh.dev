@@ -73,7 +73,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root[data-theme="auto"] {
     --sea-ink: #d7ece8;
     --sea-ink-soft: #afcdc8;
     --lagoon: #60d7cf;
@@ -153,6 +153,26 @@ body::after {
     linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
   background-size: 28px 28px;
   mask-image: radial-gradient(circle at 50% 30%, black, transparent 78%);
+}
+
+@media (max-width: 640px) {
+  body {
+    background:
+      radial-gradient(820px 420px at -12% -8%, var(--hero-a), transparent 56%),
+      radial-gradient(760px 420px at 112% -10%, var(--hero-b), transparent 58%),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--sand) 72%, white) 0%,
+        var(--foam) 48%,
+        var(--bg-base) 100%
+      );
+    background-repeat: no-repeat;
+  }
+
+  body::before,
+  body::after {
+    display: none;
+  }
 }
 
 a {
