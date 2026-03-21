@@ -182,7 +182,7 @@ export default function WritingIndex() {
                       ) : null}
                     </span>
 
-                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-(--lagoon-deep) opacity-100 transition-all duration-200 sm:translate-x-[-6px] sm:opacity-0 sm:group-hover:translate-x-0 sm:group-hover:opacity-100 sm:group-focus-visible:translate-x-0 sm:group-focus-visible:opacity-100" />
+                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-(--lagoon-deep) opacity-100 transition-all duration-200 sm:-translate-x-1.5 sm:opacity-0 sm:group-hover:translate-x-0 sm:group-hover:opacity-100 sm:group-focus-visible:translate-x-0 sm:group-focus-visible:opacity-100" />
                   </a>
                 </li>
               ))}
