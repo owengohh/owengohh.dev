@@ -10,7 +10,7 @@ type WritingEntry = {
   tags: string[];
 };
 
-const entries: WritingEntry[] = [
+export const writingEntries: WritingEntry[] = [
   {
     title: "Ship Postgres Migrations Without Surprises",
     description: "A practical checklist for making schema changes feel routine.",
@@ -76,19 +76,19 @@ const entries: WritingEntry[] = [
   },
 ];
 
-const PAGE_SIZE = 4;
+export const WRITING_PAGE_SIZE = 4;
 
 export default function WritingIndex() {
   const [query, setQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [page, setPage] = useState(1);
 
-  const tags = useMemo(() => [...new Set(entries.flatMap((entry) => entry.tags))], []);
+  const tags = useMemo(() => [...new Set(writingEntries.flatMap((entry) => entry.tags))], []);
 
   const filteredEntries = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    return entries.filter((entry) => {
+    return writingEntries.filter((entry) => {
       const matchesTag =
         selectedTags.length === 0 ||
         selectedTags.some((selectedTag) => entry.tags.includes(selectedTag));
@@ -102,11 +102,11 @@ export default function WritingIndex() {
     });
   }, [query, selectedTags]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredEntries.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(filteredEntries.length / WRITING_PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const paginatedEntries = filteredEntries.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
+    (currentPage - 1) * WRITING_PAGE_SIZE,
+    currentPage * WRITING_PAGE_SIZE,
   );
 
   const updateQuery = (value: string) => {
