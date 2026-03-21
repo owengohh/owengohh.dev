@@ -1,110 +1,96 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Bookmark, Search } from "lucide-react";
 import { MultiSelect } from "#/components/ui/multi-select";
+import { useZenblogPosts } from "#/hooks/useZenblogPosts";
+import { useZenblogTags } from "#/hooks/useZenblogTags";
 
-type WritingEntry = {
-  title: string;
-  description?: string;
-  href: string;
-  createdAt: string;
-  tags: string[];
-};
+export const WRITING_PAGE_SIZE = 10;
 
-export const writingEntries: WritingEntry[] = [
-  {
-    title: "Ship Postgres Migrations Without Surprises",
-    description: "A practical checklist for making schema changes feel routine.",
-    href: "/writing/postgres-migrations",
-    createdAt: "Mar 18, 2026",
-    tags: ["Engineering", "Workflow"],
-  },
-  {
-    title: "Personal Philosophy for Building on the Web",
-    description: "The principles I return to when software starts getting noisy.",
-    href: "/writing/personal-philosophy",
-    createdAt: "Mar 10, 2026",
-    tags: ["Career", "Personal"],
-  },
-  {
-    title: "How I Think About Productive Side Projects",
-    description: "Choosing projects small enough to finish and interesting enough to keep.",
-    href: "/writing/side-projects",
-    createdAt: "Mar 3, 2026",
-    tags: ["Career", "Writing"],
-  },
-  {
-    title: "A Tiny Setup for Writing Better Technical Notes",
-    description: "A notes workflow that stays useful once the excitement wears off.",
-    href: "/writing/technical-notes",
-    createdAt: "Feb 27, 2026",
-    tags: ["Writing", "Workflow"],
-  },
-  {
-    title: "ESP32 Captive Portal Wi-Fi Provisioning",
-    description: "A bookmarkable implementation guide for painless device onboarding.",
-    href: "/writing/esp32-provisioning",
-    createdAt: "Feb 14, 2026",
-    tags: ["Engineering", "Hardware"],
-  },
-  {
-    title: "What to Post on Twitter When You Have Nothing to Say",
-    description: "A few prompts for shipping ideas before they calcify in drafts.",
-    href: "/writing/posting-online",
-    createdAt: "Feb 4, 2026",
-    tags: ["Writing", "Personal"],
-  },
-  {
-    title: "Delete Local Branches Older Than 1 Week",
-    description: "A tiny command-line habit that keeps side work tidy.",
-    href: "/writing/delete-local-branches",
-    createdAt: "Jan 29, 2026",
-    tags: ["Workflow", "Engineering"],
-  },
-  {
-    title: "2 Years at Supabase",
-    description: "Notes on pace, ownership, and what good developer tools feel like.",
-    href: "/writing/two-years-at-supabase",
-    createdAt: "Jan 12, 2026",
-    tags: ["Career", "Personal"],
-  },
-  {
-    title: "Life-Changing Sleeping Advice",
-    description: "Small environmental changes that made my mornings less chaotic.",
-    href: "/writing/sleeping-advice",
-    createdAt: "Jan 4, 2026",
-    tags: ["Personal"],
-  },
-];
+function formatPublishedDate(value: string) {
+  return new Date(value).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
 
-export const WRITING_PAGE_SIZE = 4;
+function WritingIndexSkeleton() {
+  return (
+    <section aria-labelledby="writing-index-title">
+      <div className="mx-auto flex max-w-2xl animate-pulse flex-col gap-5 px-4 text-left sm:px-6 lg:px-8">
+        <div className="space-y-2">
+          <div className="h-12 w-64 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+          <div className="h-12.5 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+          <div className="h-10.5 w-44 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+        </div>
+
+        <div className="overflow-hidden bg-[color-mix(in_oklab,var(--surface-strong)_36%,transparent)]">
+          <div className="flex items-start gap-4 px-5 py-5">
+            <div className="mt-1 h-9 w-9 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+            <div className="flex-1 space-y-3">
+              <div className="h-4 w-28 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+              <div className="h-7 w-40 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+              <div className="h-5 w-32 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="h-5 w-36 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+          <div className="flex items-center gap-3 self-start sm:self-auto">
+            <div className="h-9 w-20 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+            <div className="h-5 w-10 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+            <div className="h-9 w-14 bg-[color-mix(in_oklab,var(--surface-strong)_72%,transparent)]" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function WritingIndex() {
   const [query, setQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [page, setPage] = useState(1);
+  const [isContentVisible, setIsContentVisible] = useState(false);
+  const { data: postsResponse, error, isLoading } = useZenblogPosts({ limit: 100 });
+  const { data: tagsResponse } = useZenblogTags();
 
-  const tags = useMemo(() => [...new Set(writingEntries.flatMap((entry) => entry.tags))], []);
+  const tags = (tagsResponse?.data ?? []).map((tag) => ({
+    label: tag.name,
+    value: tag.slug,
+  }));
 
-  const filteredEntries = useMemo(() => {
+  const filteredPosts = (() => {
     const normalizedQuery = query.trim().toLowerCase();
+    const posts = postsResponse?.data ?? [];
 
-    return writingEntries.filter((entry) => {
+    return posts.filter((post) => {
       const matchesTag =
         selectedTags.length === 0 ||
-        selectedTags.some((selectedTag) => entry.tags.includes(selectedTag));
+        selectedTags.some((selectedTag) =>
+          (post.tags ?? []).some((tag) => tag.slug === selectedTag),
+        );
       const matchesQuery =
         normalizedQuery.length === 0 ||
-        entry.title.toLowerCase().includes(normalizedQuery) ||
-        entry.description?.toLowerCase().includes(normalizedQuery) ||
-        entry.tags.some((tag) => tag.toLowerCase().includes(normalizedQuery));
+        post.title.toLowerCase().includes(normalizedQuery) ||
+        post.excerpt?.toLowerCase().includes(normalizedQuery) ||
+        (post.tags ?? []).some(
+          (tag) =>
+            tag.name.toLowerCase().includes(normalizedQuery) ||
+            tag.slug.toLowerCase().includes(normalizedQuery),
+        );
 
       return matchesTag && matchesQuery;
     });
-  }, [query, selectedTags]);
+  })();
 
-  const totalPages = Math.max(1, Math.ceil(filteredEntries.length / WRITING_PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(filteredPosts.length / WRITING_PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
-  const paginatedEntries = filteredEntries.slice(
+  const paginatedPosts = filteredPosts.slice(
     (currentPage - 1) * WRITING_PAGE_SIZE,
     currentPage * WRITING_PAGE_SIZE,
   );
@@ -119,12 +105,32 @@ export default function WritingIndex() {
     setPage(1);
   };
 
+  useEffect(() => {
+    if (isLoading) {
+      setIsContentVisible(false);
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setIsContentVisible(true);
+    }, 40);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <WritingIndexSkeleton />;
+  }
+
   return (
-    <section
-      className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8"
-      aria-labelledby="writing-index-title"
-    >
-      <div className="flex flex-col gap-6">
+    <section aria-labelledby="writing-index-title">
+      <div
+        className={`mx-auto flex max-w-2xl flex-col gap-5 px-4 text-left transition-all duration-300 sm:px-6 lg:px-8 ${
+          isContentVisible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+        }`}
+      >
         <div className="space-y-2">
           <h2
             id="writing-index-title"
@@ -134,8 +140,8 @@ export default function WritingIndex() {
           </h2>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <label className="flex flex-1 items-center gap-3 border border-(--line) bg-transparent px-4 py-3">
+        <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+          <label className="flex min-w-0 items-center gap-3 border border-(--line) bg-transparent px-4 py-3">
             <Search className="h-4 w-4 text-(--sea-ink-soft)" />
             <input
               value={query}
@@ -146,26 +152,34 @@ export default function WritingIndex() {
             />
           </label>
 
-          <label className="flex items-center gap-2 text-sm text-(--sea-ink-soft)">
+          <label className="flex items-center justify-between gap-3 text-sm text-(--sea-ink-soft) sm:justify-start">
             <span>Tags:</span>
             <MultiSelect
               ariaLabel="Filter by tags"
-              options={tags.map((tag) => ({ label: tag, value: tag }))}
+              options={tags}
               placeholder="All tags"
               value={selectedTags}
               onValueChange={updateTags}
+              className="min-w-44"
             />
           </label>
         </div>
 
         <div className="overflow-hidden border border-(--line)">
-          {paginatedEntries.length > 0 ? (
+          {error ? (
+            <div className="px-5 py-12 text-center">
+              <p className="text-base font-semibold text-(--sea-ink)">
+                Could not load writing right now.
+              </p>
+              <p className="mt-2 text-sm text-(--sea-ink-soft)">{error.message}</p>
+            </div>
+          ) : paginatedPosts.length > 0 ? (
             <ul className="divide-y divide-(--line)">
-              {paginatedEntries.map((entry) => (
-                <li key={entry.title}>
+              {paginatedPosts.map((post) => (
+                <li key={post.slug}>
                   <a
-                    href={entry.href}
-                    className="group flex items-start gap-4 px-4 py-4 no-underline sm:px-5"
+                    href={`/writing/${post.slug}`}
+                    className="group flex items-start gap-4 px-5 py-5 no-underline"
                   >
                     <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center text-(--sea-ink-soft)">
                       <Bookmark className="h-4 w-4" />
@@ -173,14 +187,14 @@ export default function WritingIndex() {
 
                     <span className="min-w-0 flex-1">
                       <span className="block text-xs uppercase tracking-[0.16em] text-(--sea-ink-soft)">
-                        {entry.createdAt}
+                        {formatPublishedDate(post.published_at)}
                       </span>
                       <span className="mt-1 block text-base font-medium text-(--sea-ink)">
-                        {entry.title}
+                        {post.title}
                       </span>
-                      {entry.description ? (
+                      {post.excerpt ? (
                         <span className="mt-1 block text-sm text-(--sea-ink-soft)">
-                          {entry.description}
+                          {post.excerpt}
                         </span>
                       ) : null}
                     </span>
@@ -204,12 +218,12 @@ export default function WritingIndex() {
 
         <div className="flex flex-col gap-3 text-sm text-(--sea-ink-soft) sm:flex-row sm:items-center sm:justify-between">
           <p>
-            Showing{" "}
-            <span className="font-semibold text-(--sea-ink)">{paginatedEntries.length}</span> of{" "}
-            <span className="font-semibold text-(--sea-ink)">{filteredEntries.length}</span> entries
+            Showing <span className="font-semibold text-(--sea-ink)">{paginatedPosts.length}</span>{" "}
+            of <span className="font-semibold text-(--sea-ink)">{filteredPosts.length}</span>{" "}
+            entries
           </p>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setPage((value) => Math.max(1, value - 1))}
