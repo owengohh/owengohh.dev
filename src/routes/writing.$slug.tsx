@@ -24,7 +24,7 @@ function WritingPostPage() {
         <div className="mb-6">
           <a
             href="/"
-            className="inline-flex items-center gap-2 border border-(--line) px-3 py-2 text-sm font-medium text-[var(--sea-ink)] no-underline hover:bg-(--link-bg-hover) hover:text-[var(--sea-ink)]"
+            className="inline-flex items-center gap-2 border border-(--line) px-3 py-2 text-sm font-medium text-(--sea-ink) no-underline hover:bg-(--link-bg-hover) hover:text-(--sea-ink)"
             style={{ color: "var(--sea-ink)", textDecoration: "none" }}
           >
             <ArrowLeft className="h-4 w-4" />
