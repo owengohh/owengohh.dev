@@ -120,7 +120,10 @@ export default function WritingIndex() {
   };
 
   return (
-    <section className="mx-auto max-w-4xl" aria-labelledby="writing-index-title">
+    <section
+      className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8"
+      aria-labelledby="writing-index-title"
+    >
       <div className="flex flex-col gap-6">
         <div className="space-y-2">
           <h2
