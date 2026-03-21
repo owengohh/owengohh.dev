@@ -52,7 +52,7 @@ export default function CommandMenu() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed left-1/2 z-30 flex h-13 w-13 -translate-x-1/2 items-center justify-center rounded-full border border-(--line) bg-[color-mix(in_oklab,var(--surface-strong)_88%,var(--chip-bg)_12%)] text-(--sea-ink-soft) shadow-[0_16px_36px_rgba(0,0,0,0.22)] backdrop-blur-md hover:-translate-y-0.5 hover:bg-(--link-bg-hover) lg:hidden"
+        className="fixed left-1/2 z-30 flex h-13 w-13 -translate-x-1/2 items-center justify-center rounded-full border border-(--line) bg-(--surface-strong) text-(--sea-ink-soft) shadow-[0_14px_28px_rgba(23,58,64,0.12)] hover:-translate-y-0.5 hover:bg-(--link-bg-hover) lg:hidden"
         style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
         aria-label="Open search"
       >

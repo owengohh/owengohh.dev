@@ -107,6 +107,10 @@ body,
   height: 100%;
 }
 
+html {
+  background-color: var(--bg-base);
+}
+
 body {
   margin: 0;
   min-height: 100dvh;
@@ -156,16 +160,19 @@ body::after {
 }
 
 @media (max-width: 640px) {
-  body {
+  html {
+    background-color: color-mix(in oklab, var(--foam) 82%, var(--bg-base) 18%);
     background:
       radial-gradient(820px 420px at -12% -8%, var(--hero-a), transparent 56%),
-      radial-gradient(760px 420px at 112% -10%, var(--hero-b), transparent 58%),
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--sand) 72%, white) 0%,
-        var(--foam) 48%,
-        var(--bg-base) 100%
-      );
+      radial-gradient(760px 420px at 112% -10%, var(--hero-b), transparent 58%);
+    background-repeat: no-repeat;
+  }
+
+  body {
+    background-color: color-mix(in oklab, var(--foam) 82%, var(--bg-base) 18%);
+    background:
+      radial-gradient(820px 420px at -12% -8%, var(--hero-a), transparent 56%),
+      radial-gradient(760px 420px at 112% -10%, var(--hero-b), transparent 58%);
     background-repeat: no-repeat;
   }
 
