@@ -2,6 +2,8 @@
 
 personal portfolio and blog
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e246ed1a-713e-4966-9b2b-aa68f8f54a38/deploy-status)](https://app.netlify.com/projects/owengohh-dev/deploys)
+
 # Getting Started
 
 To run this application:
