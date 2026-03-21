@@ -13,7 +13,7 @@ export default function Hero() {
       </div>
       <div className="mt-6 flex items-center gap-4">
         <CommandMenu />
-        <p className="hidden text-sm text-(--sea-ink-soft) sm:block">
+        <p className="hidden text-sm text-(--sea-ink-soft) lg:block">
           Press <kbd className="rounded border border-(--line) bg-(--surface) px-1.5 py-0.5 font-mono text-xs">⌘K</kbd> to navigate
         </p>
       </div>

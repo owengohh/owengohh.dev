@@ -57,7 +57,8 @@ export default function CommandMenu() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-3 left-1/2 z-30 flex h-13 w-13 -translate-x-1/2 items-center justify-center rounded-full border border-(--line) bg-[color-mix(in_oklab,var(--surface-strong)_88%,var(--chip-bg)_12%)] text-(--sea-ink-soft) shadow-[0_16px_36px_rgba(0,0,0,0.22)] backdrop-blur-md hover:-translate-y-0.5 hover:bg-(--link-bg-hover) sm:hidden"
+        className="fixed left-1/2 z-30 flex h-13 w-13 -translate-x-1/2 items-center justify-center rounded-full border border-(--line) bg-[color-mix(in_oklab,var(--surface-strong)_88%,var(--chip-bg)_12%)] text-(--sea-ink-soft) shadow-[0_16px_36px_rgba(0,0,0,0.22)] backdrop-blur-md hover:-translate-y-0.5 hover:bg-(--link-bg-hover) lg:hidden"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
         aria-label="Open search"
       >
         <Search className="h-5 w-5" />
@@ -66,27 +67,27 @@ export default function CommandMenu() {
       <Command.Dialog
         open={open}
         onOpenChange={setOpen}
-        className="fixed inset-x-4 top-[12svh] z-50 mx-auto flex max-h-[min(34rem,72svh)] w-full max-w-md animate-cmdk-dialog flex-col overflow-hidden rounded-[1.5rem] border border-(--line) bg-[color-mix(in_oklab,var(--header-bg)_88%,var(--surface-strong)_12%)] p-0 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl data-[state=closed]:hidden sm:left-1/2 sm:top-1/2 sm:inset-x-auto sm:max-h-[80dvh] sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
+        className="fixed top-[12svh] left-1/2 z-50 flex max-h-[min(30rem,68svh)] w-[min(20rem,calc(100vw-3rem))] -translate-x-1/2 animate-cmdk-dialog flex-col overflow-hidden rounded-[1.4rem] border border-(--line) bg-[color-mix(in_oklab,var(--header-bg)_88%,var(--surface-strong)_12%)] p-0 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl data-[state=closed]:hidden sm:top-1/2 sm:max-h-[80dvh] sm:w-full sm:max-w-lg sm:-translate-y-1/2 sm:rounded-2xl"
       >
-        <div className="flex items-center gap-3 border-b border-(--line) px-3.5 sm:px-4">
+        <div className="flex items-center gap-2.5 border-b border-(--line) px-3 sm:px-4">
           <Search className="h-4 w-4 text-(--sea-ink-soft)" />
           <Command.Input
             placeholder="Type a command or search..."
-            className="h-12 min-w-0 flex-1 bg-transparent pr-1 text-sm text-(--sea-ink) outline-none placeholder:text-(--sea-ink-soft)"
+            className="h-11 min-w-0 flex-1 bg-transparent pr-1 text-sm text-(--sea-ink) outline-none placeholder:text-(--sea-ink-soft)"
           />
           <button
             type="button"
             onClick={close}
-            className="flex h-7 shrink-0 items-center rounded-full border border-(--line) bg-(--chip-bg) px-2.5 text-[11px] font-medium text-(--sea-ink-soft) sm:hidden"
+            className="flex h-7 shrink-0 items-center rounded-full border border-(--line) bg-(--chip-bg) px-2 text-[10px] font-medium text-(--sea-ink-soft) lg:hidden"
             aria-label="Close command menu"
           >
             Close
           </button>
-          <kbd className="pointer-events-none ml-auto hidden h-6 shrink-0 select-none items-center gap-1 rounded-md border border-(--line) bg-(--chip-bg) px-2 font-mono text-[10px] font-medium text-(--sea-ink-soft) sm:flex">
+          <kbd className="pointer-events-none ml-auto hidden h-6 shrink-0 select-none items-center gap-1 rounded-md border border-(--line) bg-(--chip-bg) px-2 font-mono text-[10px] font-medium text-(--sea-ink-soft) lg:flex">
             ESC
           </kbd>
         </div>
-        <Command.List className="min-h-0 flex-1 overflow-y-auto px-2 py-2.5 sm:max-h-[60dvh]">
+        <Command.List className="min-h-0 flex-1 overflow-y-auto px-2 py-2 sm:max-h-[60dvh]">
           <Command.Empty className="py-8 text-center text-sm text-(--sea-ink-soft)">
             No results found.
           </Command.Empty>
@@ -98,7 +99,7 @@ export default function CommandMenu() {
               <Command.Item
                 key={route.path}
                 onSelect={() => navigateTo(route.path)}
-                className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
+                className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-1.5 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
               >
                 <span className="flex h-5 w-5 items-center justify-center rounded-md bg-(--chip-bg) text-xs font-medium text-(--sea-ink-soft)">
                   {route.name[0]}
@@ -113,7 +114,7 @@ export default function CommandMenu() {
           >
             <Command.Item
               onSelect={() => setTheme("light")}
-              className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
+              className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-1.5 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
             >
               <span className="flex h-5 w-5 items-center justify-center rounded-md bg-(--chip-bg) text-xs font-medium text-(--sea-ink-soft)">
                 L
@@ -122,7 +123,7 @@ export default function CommandMenu() {
             </Command.Item>
             <Command.Item
               onSelect={() => setTheme("dark")}
-              className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
+              className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-1.5 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
             >
               <span className="flex h-5 w-5 items-center justify-center rounded-md bg-(--chip-bg) text-xs font-medium text-(--sea-ink-soft)">
                 D
@@ -131,7 +132,7 @@ export default function CommandMenu() {
             </Command.Item>
             <Command.Item
               onSelect={() => setTheme("auto")}
-              className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
+              className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-1.5 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
             >
               <span className="flex h-5 w-5 items-center justify-center rounded-md bg-(--chip-bg) text-xs font-medium text-(--sea-ink-soft)">
                 S
@@ -140,11 +141,10 @@ export default function CommandMenu() {
             </Command.Item>
           </Command.Group>
         </Command.List>
-        <div className="flex items-center justify-between border-t border-(--line) px-3.5 py-2.5 text-[11px] text-(--sea-ink-soft) sm:hidden">
-          <span>Tap outside to close</span>
-          <span>3 themes</span>
+        <div className="border-t border-(--line) px-3 py-2 text-center text-[10px] text-(--sea-ink-soft) lg:hidden">
+          Tap outside to close
         </div>
-        <div className="hidden items-center justify-between border-t border-(--line) px-4 py-3 sm:flex">
+        <div className="hidden items-center justify-between border-t border-(--line) px-4 py-3 lg:flex">
           <div className="flex items-center gap-2 text-xs text-(--sea-ink-soft)">
             <kbd className="rounded-md border border-(--line) bg-(--chip-bg) px-1.5 py-0.5 font-mono text-[10px]">
               ↑

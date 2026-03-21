@@ -125,4 +125,55 @@ describe("CommandMenu", () => {
       expect(screen.getByText("No results found.")).toBeTruthy();
     });
   });
+
+  describe("mobile view", () => {
+    it("renders mobile search button", () => {
+      render(<CommandMenu />);
+
+      const searchButton = screen.getByLabelText("Open search");
+      expect(searchButton).toBeTruthy();
+      expect(searchButton.className).toContain("lg:hidden");
+    });
+
+    it("opens menu when mobile search button is clicked", () => {
+      render(<CommandMenu />);
+
+      const searchButton = screen.getByLabelText("Open search");
+      fireEvent.click(searchButton);
+
+      expect(screen.getByPlaceholderText("Type a command or search...")).toBeTruthy();
+    });
+
+    it("renders mobile close button when menu is open", () => {
+      render(<CommandMenu />);
+
+      fireEvent.keyDown(document, { key: "k", metaKey: true });
+
+      const closeButton = screen.getByLabelText("Close command menu");
+      expect(closeButton).toBeTruthy();
+      expect(closeButton.textContent).toBe("Close");
+    });
+
+    it("closes menu when mobile close button is clicked", async () => {
+      render(<CommandMenu />);
+
+      fireEvent.keyDown(document, { key: "k", metaKey: true });
+      expect(screen.getByPlaceholderText("Type a command or search...")).toBeTruthy();
+
+      const closeButton = screen.getByLabelText("Close command menu");
+      await act(async () => {
+        fireEvent.click(closeButton);
+      });
+
+      expect(screen.queryByPlaceholderText("Type a command or search...")).toBeNull();
+    });
+
+    it("shows mobile footer text when menu is open", () => {
+      render(<CommandMenu />);
+
+      fireEvent.keyDown(document, { key: "k", metaKey: true });
+
+      expect(screen.getByText("Tap outside to close")).toBeTruthy();
+    });
+  });
 });
