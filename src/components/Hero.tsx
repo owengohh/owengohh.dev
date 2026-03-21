@@ -10,6 +10,9 @@ export default function Hero() {
       <div className="mt-4">
         <Socials />
       </div>
+      <p className="mt-4 text-sm text-(--sea-ink-soft)">
+        Press <kbd className="rounded border border-(--line) bg-(--surface) px-1.5 py-0.5 font-mono text-xs">⌘K</kbd> to navigate
+      </p>
     </div>
   );
 }
