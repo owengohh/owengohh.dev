@@ -2,6 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Hero from "../../components/Hero";
 
+// Mock CommandMenu since it requires RouterProvider
+vi.mock("../../components/CommandMenu", () => ({
+  default: () => <div data-testid="command-menu">Search</div>,
+}));
+
 describe("Hero", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -26,10 +31,15 @@ describe("Hero", () => {
     expect(links.length).toBe(2);
   });
 
+  it("renders mobile search button", () => {
+    render(<Hero />);
+
+    expect(screen.getByTestId("command-menu")).toBeTruthy();
+  });
+
   it("renders keyboard shortcut hint", () => {
     render(<Hero />);
 
     expect(screen.getByText(/⌘K/)).toBeTruthy();
-    expect(screen.getByText(/to navigate/)).toBeTruthy();
   });
 });

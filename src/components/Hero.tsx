@@ -1,4 +1,5 @@
 import Socials from "./Socials";
+import CommandMenu from "./CommandMenu";
 
 export default function Hero() {
   return (
@@ -10,9 +11,12 @@ export default function Hero() {
       <div className="mt-4">
         <Socials />
       </div>
-      <p className="mt-4 text-sm text-(--sea-ink-soft)">
-        Press <kbd className="rounded border border-(--line) bg-(--surface) px-1.5 py-0.5 font-mono text-xs">⌘K</kbd> to navigate
-      </p>
+      <div className="mt-6 flex items-center gap-4">
+        <CommandMenu />
+        <p className="hidden text-sm text-(--sea-ink-soft) sm:block">
+          Press <kbd className="rounded border border-(--line) bg-(--surface) px-1.5 py-0.5 font-mono text-xs">⌘K</kbd> to navigate
+        </p>
+      </div>
     </div>
   );
 }
