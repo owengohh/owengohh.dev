@@ -1,195 +1,95 @@
 # owengohh.dev
 
-personal portfolio and blog
+My personal portfolio and blog.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/e246ed1a-713e-4966-9b2b-aa68f8f54a38/deploy-status)](https://app.netlify.com/projects/owengohh-dev/deploys)
 
-# Getting Started
+## Tech Stack
 
-To run this application:
+### Framework: TanStack Start
+
+A full-stack React framework with SSR built on top of TanStack Router. Provides:
+- Server-side rendering with streaming
+- Server functions for API calls
+- File-based routing
+- Type-safe navigation
+
+### Build Tool: Vite+
+
+Unified toolchain that wraps Vite, Rolldown, and Vitest. All commands use `vp`:
+
+```bash
+vp dev       # Start dev server
+vp build     # Production build
+vp test      # Run tests
+vp check     # Format, lint, typecheck
+vp add       # Add dependency
+```
+
+### Routing: TanStack Router
+
+File-based routing in `src/routes/`. Routes are auto-generated from file structure:
+
+```
+src/routes/
+  __root.tsx      # Root layout
+  index.tsx       # /
+  about.tsx       # /about
+  writing.$slug.tsx  # /writing/:slug
+```
+
+### Data Fetching: TanStack Query
+
+Used with custom hooks for blog data from Zenblog:
+
+```tsx
+// Hook pattern
+const { data, error, isLoading } = useZenblogPosts({ limit: 100 });
+
+// Internally uses server functions + TanStack Query
+const fetchPosts = useServerFn(getZenblogPosts);
+useQuery({ queryKey: ["zenblog", "posts"], queryFn: fetchPosts });
+```
+
+### Styling: Tailwind CSS v4
+
+Utility-first CSS with custom properties for theming. Light/dark/auto themes via CSS variables.
+
+### CMS: Zenblog
+
+Headless blog CMS. Server functions fetch posts/tags server-side to keep API keys secure.
+
+## Development
 
 ```bash
 pnpm install
-pnpm dev
-```
-
-# Building For Production
-
-To build this application for production:
-
-```bash
-pnpm build
+vp dev
 ```
 
 ## Testing
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
-
 ```bash
-pnpm test
+vp test
 ```
 
-## Styling
+Tests use Vitest with jsdom environment. Component tests are in `src/test/`.
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+## Project Structure
 
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `pnpm add @tailwindcss/vite tailwindcss --dev`
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```
+src/
+  routes/           # File-based routes
+  components/       # React components
+    ui/             # UI primitives (button, etc.)
+  hooks/            # Custom hooks (useZenblogPosts, etc.)
+  lib/              # Utilities and server functions
+    zenblog.ts      # Zenblog client
+    zenblog-*.ts    # Server functions
+    routes.ts       # Route definitions for CommandMenu
+  test/             # Test files
+  styles.css        # Global styles + Tailwind
 ```
 
-Then anywhere in your JSX you can use it like so:
+## Deploy
 
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "My App" },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-});
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from "@tanstack/react-start";
-
-const getServerTime = createServerFn({
-  method: "GET",
-}).handler(async () => {
-  return new Date().toISOString();
-});
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    getServerTime().then(setTime);
-  }, []);
-
-  return <div>Server time: {time}</div>;
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from "@tanstack/react-router";
-import { json } from "@tanstack/react-start";
-
-export const Route = createFileRoute("/api/hello")({
-  server: {
-    handlers: {
-      GET: () => json({ message: "Hello, World!" }),
-    },
-  },
-});
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/people")({
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json();
-  },
-  component: PeopleComponent,
-});
-
-function PeopleComponent() {
-  const data = Route.useLoaderData();
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  );
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+Deployed on Netlify with automatic builds from main branch.
