@@ -12,7 +12,7 @@ describe("Socials", () => {
 
     const links = screen.getAllByRole("link");
     const githubLink = links.find(
-      (link) => link.getAttribute("href") === "https://github.com/owengohh"
+      (link) => link.getAttribute("href") === "https://github.com/owengohh",
     );
     expect(githubLink).toBeTruthy();
   });
@@ -22,7 +22,7 @@ describe("Socials", () => {
 
     const links = screen.getAllByRole("link");
     const linkedinLink = links.find(
-      (link) => link.getAttribute("href") === "https://linkedin.com/in/owengohh"
+      (link) => link.getAttribute("href") === "https://linkedin.com/in/owengohh",
     );
     expect(linkedinLink).toBeTruthy();
   });

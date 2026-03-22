@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { useEffect } from "react";
 import { getZenblogPost } from "#/lib/zenblog-post";
+import { addRecentTab } from "#/lib/recent-tabs";
 
 export const Route = createFileRoute("/writing/$slug")({
   loader: ({ params }) => getZenblogPost({ data: { slug: params.slug } }),
@@ -17,6 +19,11 @@ function formatPublishedDate(value: string) {
 
 function WritingPostPage() {
   const { data: post } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+
+  useEffect(() => {
+    addRecentTab(`/writing/${slug}`, post.title);
+  }, [slug, post.title]);
 
   return (
     <main className="page-wrap px-4 py-12 sm:py-16">

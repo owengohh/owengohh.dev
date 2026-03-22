@@ -3,6 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { Command } from "cmdk";
 import { Search } from "lucide-react";
 import { routes } from "#/lib/routes";
+import { getRecentTabs, addRecentTab, type RecentTab } from "#/lib/recent-tabs";
+import { cn } from "#/lib/utils";
 
 type ThemeMode = "light" | "dark" | "auto";
 
@@ -19,6 +21,7 @@ function applyThemeMode(mode: ThemeMode) {
 
 export default function CommandMenu() {
   const [open, setOpen] = useState(false);
+  const [recentTabs, setRecentTabs] = useState<RecentTab[]>([]);
   const navigate = useNavigate();
 
   const close = useCallback(() => {
@@ -37,6 +40,12 @@ export default function CommandMenu() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  useEffect(() => {
+    if (open) {
+      setRecentTabs(getRecentTabs());
+    }
+  }, [open]);
+
   const setTheme = (mode: ThemeMode) => {
     applyThemeMode(mode);
     localStorage.setItem("theme", mode);
@@ -44,6 +53,7 @@ export default function CommandMenu() {
   };
 
   const navigateTo = (to: string) => {
+    addRecentTab(to);
     void navigate({ to });
     close();
   };
@@ -86,13 +96,41 @@ export default function CommandMenu() {
           <Command.Empty className="py-8 text-center text-sm text-(--sea-ink-soft)">
             No results found.
           </Command.Empty>
+          {recentTabs.length > 0 && (
+            <Command.Group
+              heading="Recent"
+              className="**:[[cmdk-group-heading]]:mb-2 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-(--sea-ink-soft)"
+            >
+              {recentTabs.map((tab) => {
+                const route = routes.find((r) => r.path === tab.path);
+                const name = tab.title ?? route?.name ?? tab.path;
+                return (
+                  <Command.Item
+                    key={tab.path}
+                    value={`recent-${tab.path}`}
+                    onSelect={() => navigateTo(tab.path)}
+                    className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-1.5 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
+                  >
+                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-(--chip-bg) text-xs font-medium text-(--sea-ink-soft)">
+                      {name[0]}
+                    </span>
+                    {name}
+                  </Command.Item>
+                );
+              })}
+            </Command.Group>
+          )}
           <Command.Group
             heading="Navigation"
-            className="**:[[cmdk-group-heading]]:mb-2 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-(--sea-ink-soft)"
+            className={cn(
+              recentTabs.length > 0 && "mt-4",
+              "**:[[cmdk-group-heading]]:mb-2 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-(--sea-ink-soft)",
+            )}
           >
             {routes.map((route) => (
               <Command.Item
                 key={route.path}
+                value={`nav-${route.path}`}
                 onSelect={() => navigateTo(route.path)}
                 className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-1.5 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
               >
@@ -108,6 +146,7 @@ export default function CommandMenu() {
             className="mt-4 **:[[cmdk-group-heading]]:mb-2 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-(--sea-ink-soft)"
           >
             <Command.Item
+              value="theme-light"
               onSelect={() => setTheme("light")}
               className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-1.5 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
             >
@@ -117,6 +156,7 @@ export default function CommandMenu() {
               Light
             </Command.Item>
             <Command.Item
+              value="theme-dark"
               onSelect={() => setTheme("dark")}
               className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-1.5 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
             >
@@ -126,6 +166,7 @@ export default function CommandMenu() {
               Dark
             </Command.Item>
             <Command.Item
+              value="theme-system"
               onSelect={() => setTheme("auto")}
               className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-1.5 text-sm text-(--sea-ink) data-[selected=true]:bg-(--link-bg-hover)"
             >

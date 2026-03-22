@@ -9,6 +9,7 @@ My personal portfolio and blog.
 ### Framework: TanStack Start
 
 A full-stack React framework with SSR built on top of TanStack Router. Provides:
+
 - Server-side rendering with streaming
 - Server functions for API calls
 - File-based routing
