@@ -1,11 +1,12 @@
 import { defineConfig } from "vite-plus";
 import { devtools } from "@tanstack/devtools-vite";
-import { cloudflare } from "@cloudflare/vite-plugin";
 
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+
+const isTest = process.env.VITEST === "true";
 
 const config = defineConfig({
   fmt: {
@@ -20,7 +21,17 @@ const config = defineConfig({
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
   },
-  plugins: [devtools(), cloudflare({ viteEnvironment: {name: "ssr"}}), tailwindcss(), tanstackStart(), viteReact()],
+  plugins: [
+    devtools(),
+    !isTest &&
+      (async () => {
+        const { cloudflare } = await import("@cloudflare/vite-plugin");
+        return cloudflare({ viteEnvironment: { name: "ssr" } });
+      })(),
+    tailwindcss(),
+    tanstackStart(),
+    viteReact(),
+  ].filter(Boolean),
 });
 
 export default config;

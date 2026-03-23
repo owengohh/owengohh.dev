@@ -8,4 +8,7 @@
   "observability": {
     "enabled": true,
   },
+  "vars": {
+    "ZENBLOG_BLOG_ID": "6edad567-0911-4843-b3c6-ed53bb9100ed",
+  },
 }

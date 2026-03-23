@@ -1,8 +1,0 @@
-[build]
-command = "npm install -g vite-plus && vp build"
-dir = "dist/client"
-
-[dev]
-command = "pnpm dev"
-targetPort = 3000
-port = 8888
