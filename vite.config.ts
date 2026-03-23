@@ -7,6 +7,8 @@ import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import netlify from "@netlify/vite-plugin-tanstack-start";
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 const config = defineConfig({
   fmt: {
     ignorePatterns: ["src/routeTree.gen.ts"],
@@ -20,7 +22,11 @@ const config = defineConfig({
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
   },
-  plugins: [devtools(), netlify(), tailwindcss(), tanstackStart(), viteReact()],
+  plugins: [devtools(), tailwindcss(), tanstackStart(), viteReact(), cloudflare({
+    viteEnvironment: {
+      name: "ssr"
+    }
+  })],
 });
 
 export default config;
