@@ -20,7 +20,7 @@ type UseZenblogPostsResult = {
 const ZENBLOG_POSTS_STALE_TIME = 5 * 60 * 1000;
 
 export function useZenblogPosts(options: UseZenblogPostsOptions = {}): UseZenblogPostsResult {
-  const { author, cache, category, enabled = true, limit, offset, tags } = options;
+  const { author, category, enabled = true, limit, offset, tags } = options;
   const fetchPosts = useServerFn(getZenblogPosts);
   const query = useQuery({
     queryKey: [
@@ -38,7 +38,6 @@ export function useZenblogPosts(options: UseZenblogPostsOptions = {}): UseZenblo
       fetchPosts({
         data: {
           ...(author ? { author } : {}),
-          ...(cache ? { cache } : {}),
           ...(category ? { category } : {}),
           ...(typeof limit === "number" ? { limit } : {}),
           ...(typeof offset === "number" ? { offset } : {}),

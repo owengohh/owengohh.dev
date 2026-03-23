@@ -3,7 +3,6 @@ import { zenblog } from "#/lib/zenblog";
 
 export type ZenblogPostsInput = {
   author?: string;
-  cache?: RequestCache;
   category?: string;
   limit?: number;
   offset?: number;
