@@ -1,11 +1,11 @@
 import { defineConfig } from "vite-plus";
 import { devtools } from "@tanstack/devtools-vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
 
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import netlify from "@netlify/vite-plugin-tanstack-start";
 
 const config = defineConfig({
   fmt: {
@@ -20,7 +20,7 @@ const config = defineConfig({
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
   },
-  plugins: [devtools(), netlify(), tailwindcss(), tanstackStart(), viteReact()],
+  plugins: [devtools(), cloudflare({ viteEnvironment: {name: "ssr"}}), tailwindcss(), tanstackStart(), viteReact()],
 });
 
 export default config;
