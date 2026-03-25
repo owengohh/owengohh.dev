@@ -1,6 +1,30 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import WritingIndex, { WRITING_PAGE_SIZE } from "../../components/WritingIndex";
+
+vi.mock("@tanstack/react-router", () => ({
+  Link: ({
+    children,
+    to,
+    params,
+    ...props
+  }: {
+    children: ReactNode;
+    to: string;
+    params?: Record<string, string>;
+    [key: string]: unknown;
+  }) => {
+    const href =
+      to === "/writing/$slug" && params?.slug ? `/writing/${params.slug}` : to;
+
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
+    );
+  },
+}));
 
 const mockPosts = [
   {
