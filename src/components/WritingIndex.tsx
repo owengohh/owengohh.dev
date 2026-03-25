@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight, Bookmark, Search } from "lucide-react";
 import { MultiSelect } from "#/components/ui/multi-select";
 import { useZenblogPosts } from "#/hooks/useZenblogPosts";
@@ -177,8 +178,9 @@ export default function WritingIndex() {
             <ul className="divide-y divide-(--line)">
               {paginatedPosts.map((post) => (
                 <li key={post.slug}>
-                  <a
-                    href={`/writing/${post.slug}`}
+                  <Link
+                    to="/writing/$slug"
+                    params={{ slug: post.slug }}
                     className="group flex items-start gap-4 px-5 py-5 no-underline"
                   >
                     <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center text-(--sea-ink-soft)">
@@ -207,7 +209,7 @@ export default function WritingIndex() {
                     </span>
 
                     <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-(--lagoon-deep) opacity-100 transition-all duration-200 sm:-translate-x-1.5 sm:opacity-0 sm:group-hover:translate-x-0 sm:group-hover:opacity-100 sm:group-focus-visible:translate-x-0 sm:group-focus-visible:opacity-100" />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

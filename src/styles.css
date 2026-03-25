@@ -28,6 +28,24 @@
   }
 }
 
+@keyframes page-slide-out {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-18px);
+  }
+}
+
+@keyframes page-slide-in {
+  0% {
+    transform: translateX(18px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 :root {
   --sea-ink: #173a40;
   --sea-ink-soft: #416166;
@@ -213,6 +231,21 @@ pre code {
 .page-wrap {
   width: min(1080px, calc(100% - 2rem));
   margin-inline: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+
+::view-transition-old(root) {
+  animation-name: page-slide-out;
+}
+
+::view-transition-new(root) {
+  animation-name: page-slide-in;
 }
 
 .display-title {

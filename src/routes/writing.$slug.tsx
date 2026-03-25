@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
 import { getZenblogPost } from "#/lib/zenblog-post";
@@ -29,14 +29,14 @@ function WritingPostPage() {
     <main className="page-wrap px-4 py-12 sm:py-16">
       <article className="mx-auto max-w-3xl">
         <div className="mb-6">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="inline-flex items-center gap-2 border border-(--line) px-3 py-2 text-sm font-medium text-(--sea-ink) no-underline hover:bg-(--link-bg-hover) hover:text-(--sea-ink)"
             style={{ color: "var(--sea-ink)", textDecoration: "none" }}
           >
             <ArrowLeft className="h-4 w-4" />
             back
-          </a>
+          </Link>
         </div>
 
         <header className="border-b border-(--line) pb-8">
