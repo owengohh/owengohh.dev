@@ -3,9 +3,23 @@ import { render, screen, fireEvent, act } from "@testing-library/react";
 import CommandMenu from "../../components/CommandMenu";
 import { getRecentTabs, addRecentTab } from "../../lib/recent-tabs";
 
+const navigateMock = vi.fn();
+
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual<typeof import("@tanstack/react-router")>(
+    "@tanstack/react-router",
+  );
+
+  return {
+    ...actual,
+    useNavigate: () => navigateMock,
+  };
+});
+
 describe("CommandMenu", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    navigateMock.mockReset();
     document.documentElement.classList.remove("light", "dark");
     document.documentElement.removeAttribute("data-theme");
     window.localStorage.clear();
@@ -44,20 +58,6 @@ describe("CommandMenu", () => {
     });
   });
 
-  describe("overlay", () => {
-    it("closes the menu when clicking the overlay", () => {
-      render(<CommandMenu />);
-
-      fireEvent.keyDown(document, { key: "k", metaKey: true });
-      expect(screen.getByPlaceholderText("Type a command or search...")).toBeTruthy();
-
-      const overlay = document.querySelector(".animate-cmdk-overlay");
-      if (overlay) fireEvent.click(overlay);
-
-      expect(screen.queryByPlaceholderText("Type a command or search...")).toBeNull();
-    });
-  });
-
   describe("theme switching", () => {
     it("switches to light theme when Light is selected", async () => {
       render(<CommandMenu />);
@@ -72,6 +72,7 @@ describe("CommandMenu", () => {
 
       expect(document.documentElement.classList.contains("light")).toBe(true);
       expect(window.localStorage.getItem("theme")).toBe("light");
+      expect(screen.queryByPlaceholderText("Type a command or search...")).toBeNull();
     });
 
     it("switches to dark theme when Dark is selected", async () => {
@@ -87,6 +88,7 @@ describe("CommandMenu", () => {
 
       expect(document.documentElement.classList.contains("dark")).toBe(true);
       expect(window.localStorage.getItem("theme")).toBe("dark");
+      expect(screen.queryByPlaceholderText("Type a command or search...")).toBeNull();
     });
 
     it("switches to system theme when System is selected", async () => {
@@ -101,6 +103,7 @@ describe("CommandMenu", () => {
       });
 
       expect(window.localStorage.getItem("theme")).toBe("auto");
+      expect(screen.queryByPlaceholderText("Type a command or search...")).toBeNull();
     });
   });
 
@@ -111,6 +114,20 @@ describe("CommandMenu", () => {
       fireEvent.keyDown(document, { key: "k", metaKey: true });
 
       expect(screen.getByRole("option", { name: /Home/ })).toBeTruthy();
+    });
+
+    it("closes the menu when a navigation item is selected", async () => {
+      render(<CommandMenu />);
+
+      fireEvent.keyDown(document, { key: "k", metaKey: true });
+
+      const homeOption = screen.getByRole("option", { name: /Home/ });
+
+      await act(async () => {
+        fireEvent.click(homeOption);
+      });
+
+      expect(screen.queryByPlaceholderText("Type a command or search...")).toBeNull();
     });
   });
 

@@ -47,15 +47,15 @@ export default function CommandMenu() {
   }, [open]);
 
   const setTheme = (mode: ThemeMode) => {
+    close();
     applyThemeMode(mode);
     localStorage.setItem("theme", mode);
-    close();
   };
 
   const navigateTo = (to: string) => {
+    close();
     addRecentTab(to);
     void navigate({ to });
-    close();
   };
 
   return (
@@ -72,7 +72,8 @@ export default function CommandMenu() {
       <Command.Dialog
         open={open}
         onOpenChange={setOpen}
-        className="fixed top-[12svh] left-1/2 z-50 flex max-h-[min(30rem,68svh)] w-[min(20rem,calc(100vw-3rem))] -translate-x-1/2 animate-cmdk-dialog flex-col overflow-hidden rounded-[1.4rem] border border-(--line) bg-[color-mix(in_oklab,var(--header-bg)_88%,var(--surface-strong)_12%)] p-0 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl data-[state=closed]:hidden sm:top-1/2 sm:max-h-[80dvh] sm:w-full sm:max-w-lg sm:-translate-y-1/2 sm:rounded-2xl"
+        overlayClassName="fixed inset-0 z-40 animate-cmdk-overlay bg-black/50 backdrop-blur-sm"
+        contentClassName="fixed top-[12svh] left-1/2 z-50 flex max-h-[min(30rem,68svh)] w-[min(20rem,calc(100vw-3rem))] -translate-x-1/2 animate-cmdk-dialog flex-col overflow-hidden rounded-[1.4rem] border border-(--line) bg-[color-mix(in_oklab,var(--header-bg)_88%,var(--surface-strong)_12%)] p-0 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl data-[state=closed]:hidden sm:top-1/2 sm:max-h-[80dvh] sm:w-full sm:max-w-lg sm:-translate-y-1/2 sm:rounded-2xl"
       >
         <div className="flex items-center gap-2.5 border-b border-(--line) px-3 sm:px-4">
           <Search className="h-4 w-4 text-(--sea-ink-soft)" />
@@ -198,13 +199,6 @@ export default function CommandMenu() {
           </div>
         </div>
       </Command.Dialog>
-
-      {open && (
-        <div
-          className="fixed inset-0 z-40 animate-cmdk-overlay bg-black/50 backdrop-blur-sm"
-          onClick={close}
-        />
-      )}
     </>
   );
 }
